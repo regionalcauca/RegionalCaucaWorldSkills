@@ -22,4 +22,14 @@
         android:name="com.santiago.regionalcaucaworldskills.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/navigation_categoria_id"
+        android:name="com.santiago.regionalcaucaworldskills.ui.categoriaid.CategoriaIdFragment"
+        android:label="Tu Elección"
+        tools:layout="@layout/fragment_categoria_id" />
+    <fragment
+        android:id="@+id/navigation_producto"
+        android:name="com.santiago.regionalcaucaworldskills.ui.producto.ProductoFragment"
+        android:label="Producto"
+        tools:layout="@layout/fragment_producto" />
 </navigation>
