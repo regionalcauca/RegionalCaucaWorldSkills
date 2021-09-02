@@ -19,6 +19,10 @@ class Constants {
         val KEY_CONTRASENA = "contrasena"
         val KEY_RECORDAR = "recordar"
         val KEY_STATUS = "status"
+        val KEY_NOMBRE = "nombre"
+        val KEY_ID_CLIENTE = "idCliente"
+        val KEY_TOKEN = "token"
+
 
 
 
@@ -26,7 +30,7 @@ class Constants {
 
 
         val DB_NAME = "restaurante"
-        val DB_VERSION = 9
+        val DB_VERSION = 11
 
 
         //historial
@@ -65,7 +69,7 @@ class Constants {
                 TABLE_COLUMN_2_PED + " INTEGER NOT NULL , " +
                 TABLE_COLUMN_3_PED + " TEXT NOT NULL , " +
                 TABLE_COLUMN_4_PED + " TEXT NOT NULL , " +
-                TABLE_COLUMN_5_PED + " BLOB NOT NULL , " +
+                TABLE_COLUMN_5_PED + " TEXT NOT NULL , " +
                 TABLE_COLUMN_6_PED + " INTEGER NOT NULL , " +
                 TABLE_COLUMN_7_PED + " INTEGER NOT NULL , " +
                 TABLE_COLUMN_8_PED + " INTEGER NOT NULL ) "

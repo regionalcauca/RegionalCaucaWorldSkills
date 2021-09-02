@@ -8,15 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.santiago.regionalcaucaworldskills.R
 import com.santiago.regionalcaucaworldskills.databinding.ItemCategoriaIdBinding
 import com.santiago.regionalcaucaworldskills.models.Constants
 
-import com.santiago.regionalcaucaworldskills.models.DBCategoriaId
-import com.santiago.regionalcaucaworldskills.models.bd.DBManager
-import com.santiago.regionalcaucaworldskills.models.DBPedido
+import com.santiago.regionalcaucaworldskills.models.local.DBCategoriaId
+import com.santiago.regionalcaucaworldskills.models.local.bd.DBManager
+import com.santiago.regionalcaucaworldskills.models.local.DBPedido
+import com.santiago.regionalcaucaworldskills.models.webservice.categoriaid.Productos
 
-class CategoriaIdAdapter (val categorias : List<DBCategoriaId>): RecyclerView.Adapter<CategoriaIdAdapter.CategoriaIdHolder>() {
+class CategoriaIdAdapter (val categorias : List<Productos>): RecyclerView.Adapter<CategoriaIdAdapter.CategoriaIdHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriaIdHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         return CategoriaIdHolder(layoutInflater.inflate(R.layout.item_categoria_id,parent,false),parent.context)
@@ -30,11 +32,12 @@ class CategoriaIdAdapter (val categorias : List<DBCategoriaId>): RecyclerView.Ad
     class CategoriaIdHolder(val view : View,val context: Context): RecyclerView.ViewHolder(view){
         private val binding = ItemCategoriaIdBinding.bind(view)
         val dbManager = DBManager(context)
-        fun bind(categoriaId: DBCategoriaId){
+        fun bind(categoriaId: Productos){
             binding.txtNombre.text = categoriaId.nombre
             binding.txtDescripcion.text = categoriaId.descripcion
             binding.txtPrecio.text = "$"+categoriaId.precio
-            binding.imageView3.setImageBitmap(decodeBitmap(categoriaId.imagen))
+            //binding.imageView3.setImageBitmap(decodeBitmap(categoriaId.imagen))
+            Glide.with(binding.root).load(categoriaId.url_imagen).into(binding.imageView3)
             binding.root.setOnClickListener {
                 Constants.ID_PRODUCTO = categoriaId.id
                 Navigation.findNavController(binding.root).navigate(R.id.navigation_producto)
@@ -42,8 +45,10 @@ class CategoriaIdAdapter (val categorias : List<DBCategoriaId>): RecyclerView.Ad
             binding.btnAgregar.setOnClickListener{
                 val lista = dbManager.listAcumulacion(categoriaId.id)
                 if (lista.isEmpty()){
-                    val res = dbManager.insertPedido(DBPedido(0,categoriaId.id,categoriaId.nombre,categoriaId.descripcion,
-                        categoriaId.imagen,categoriaId.precio, categoriaId.precio,1))
+                    val res = dbManager.insertPedido(
+                        DBPedido(0,categoriaId.id,categoriaId.nombre,categoriaId.descripcion,
+                        categoriaId.url_imagen,categoriaId.precio, categoriaId.precio,1)
+                    )
                     if (res>0){
                         Navigation.findNavController(binding.root).navigate(R.id.navigation_dashboard)
                     }

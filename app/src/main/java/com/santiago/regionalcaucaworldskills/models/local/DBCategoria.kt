@@ -1,4 +1,4 @@
-package com.santiago.regionalcaucaworldskills.models
+package com.santiago.regionalcaucaworldskills.models.local
 
 data class DBCategoria(
     var id:Int = 0,

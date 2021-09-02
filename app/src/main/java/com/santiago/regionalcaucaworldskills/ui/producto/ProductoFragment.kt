@@ -7,17 +7,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import com.bumptech.glide.Glide
 import com.santiago.regionalcaucaworldskills.R
 import com.santiago.regionalcaucaworldskills.databinding.FragmentProductoBinding
 import com.santiago.regionalcaucaworldskills.models.Constants
-import com.santiago.regionalcaucaworldskills.models.DBPedido
-import com.santiago.regionalcaucaworldskills.models.bd.DBManager
+import com.santiago.regionalcaucaworldskills.models.local.DBPedido
+import com.santiago.regionalcaucaworldskills.models.local.bd.DBManager
+import com.santiago.regionalcaucaworldskills.models.webservice.producto.ResponseProducto
 import com.santiago.regionalcaucaworldskills.ui.home.HomeViewModel
+import kotlinx.coroutines.flow.collect
 
 
 class ProductoFragment : Fragment() {
-    private lateinit var homeViewModel: HomeViewModel
+    private val viewModel: ProductoViewModel by viewModels()
     private var _binding: FragmentProductoBinding? = null
 
     // This property is only valid between onCreateView and
@@ -42,34 +47,40 @@ class ProductoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val dbManager = DBManager(requireActivity())
-        val listaBind = dbManager.listProducto(Constants.ID_PRODUCTO)
-        binding.img.setImageBitmap(decodeBitmap(listaBind[0].imagen))
-        binding.txtDescripcion.text = listaBind[0].descripcion
-        binding.txtNombre.text = listaBind[0].nombre
-        binding.txtPrecio.text = "$"+listaBind[0].precio
+//        val dbManager = DBManager(requireActivity())
+//        val listaBind = dbManager.listProducto(Constants.ID_PRODUCTO)
 
-        binding.btnAgregar.setOnClickListener{
-            val lista = dbManager.listAcumulacion(listaBind[0].id)
-            if (lista.isEmpty()){
-                val res = dbManager.insertPedido(
-                    DBPedido(0,listaBind[0].id,listaBind[0].nombre,listaBind[0].descripcion,
-                    listaBind[0].imagen,listaBind[0].precio, listaBind[0].precio,1)
-                )
-                if (res>0){
-                    Navigation.findNavController(binding.root).navigate(R.id.navigation_dashboard)
-                }
-            }else{
-                val res =  dbManager.updatePedido(lista[0].id,lista[0].precioUnidad*(lista[0].cantidad+1),lista[0].cantidad+1)
-                if (res>0){
-                    Navigation.findNavController(binding.root).navigate(R.id.navigation_dashboard)
+        lifecycleScope.launchWhenStarted {
+            viewModel.getProducto(Constants.ID_PRODUCTO).collect { data ->
+                when(data){
+                    is ResponseProducto ->{
+                        binding.txtDescripcion.text = data.productos.descripcion
+                        binding.txtNombre.text = data.productos.nombre
+                        binding.txtPrecio.text = "$"+data.productos.precio
+                        Glide.with(binding.root).load(data.productos.url_imagen).into(binding.img)
+                        binding.btnAgregar.setOnClickListener{
+                            val dbManager = DBManager(requireActivity())
+                            val lista = dbManager.listAcumulacion(data.productos.id)
+                            if (lista.isEmpty()){
+                                val res = dbManager.insertPedido(
+                                    DBPedido(0,data.productos.id,data.productos.nombre,data.productos.descripcion, data.productos.url_imagen,data.productos.precio, data.productos.precio,1)
+                                )
+                                if (res>0){
+                                    Navigation.findNavController(binding.root).navigate(R.id.navigation_dashboard)
+                                }
+                            }else{
+                                val res =  dbManager.updatePedido(lista[0].id,lista[0].precioUnidad*(lista[0].cantidad+1),lista[0].cantidad+1)
+                                if (res>0){
+                                    Navigation.findNavController(binding.root).navigate(R.id.navigation_dashboard)
+                                }
+                            }
+                        }
+                        binding.carga.visibility = View.GONE
+                        binding.contenedor.visibility = View.VISIBLE
+                    }
                 }
             }
         }
-
-
-
-
     }
 
     private fun decodeBitmap(byteArray: ByteArray): Bitmap {

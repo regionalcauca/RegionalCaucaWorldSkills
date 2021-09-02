@@ -1,4 +1,4 @@
-package com.santiago.regionalcaucaworldskills.models.bd
+package com.santiago.regionalcaucaworldskills.models.local.bd
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase

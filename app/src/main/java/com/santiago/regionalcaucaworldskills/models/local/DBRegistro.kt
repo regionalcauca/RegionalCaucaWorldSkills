@@ -1,4 +1,4 @@
-package com.santiago.regionalcaucaworldskills.models
+package com.santiago.regionalcaucaworldskills.models.local
 
 data class DBRegistro(
     var id : Int = 0,

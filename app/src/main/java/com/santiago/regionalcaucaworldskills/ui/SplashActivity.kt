@@ -10,8 +10,10 @@ import android.os.CountDownTimer
 import android.widget.Toast
 import com.santiago.regionalcaucaworldskills.R
 import com.santiago.regionalcaucaworldskills.models.*
-import com.santiago.regionalcaucaworldskills.models.bd.DBHelper
-import com.santiago.regionalcaucaworldskills.models.bd.DBManager
+import com.santiago.regionalcaucaworldskills.models.local.bd.DBHelper
+import com.santiago.regionalcaucaworldskills.models.local.bd.DBManager
+import com.santiago.regionalcaucaworldskills.models.local.DBCategoria
+import com.santiago.regionalcaucaworldskills.models.local.DBCategoriaId
 import com.santiago.regionalcaucaworldskills.ui.iniciosesion.InicioSesionActivity
 import java.io.ByteArrayOutputStream
 

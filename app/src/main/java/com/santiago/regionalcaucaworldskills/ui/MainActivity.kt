@@ -15,6 +15,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.santiago.regionalcaucaworldskills.R
 import com.santiago.regionalcaucaworldskills.databinding.ActivityMainBinding
 import com.santiago.regionalcaucaworldskills.models.Constants
+import com.santiago.regionalcaucaworldskills.models.local.bd.DBManager
 import com.santiago.regionalcaucaworldskills.ui.iniciosesion.InicioSesionActivity
 
 class MainActivity : AppCompatActivity() {
@@ -55,6 +56,8 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.cerrarSesion ->{
+                val dbManager = DBManager(applicationContext)
+                val res = dbManager.deleteAll()
                 val shared = getSharedPreferences("inicioSesion", Context.MODE_PRIVATE)
                 val edit = shared.edit()
                 edit.apply {

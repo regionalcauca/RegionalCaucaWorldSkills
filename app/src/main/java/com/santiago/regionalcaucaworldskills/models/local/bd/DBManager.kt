@@ -1,9 +1,14 @@
-package com.santiago.regionalcaucaworldskills.models.bd
+package com.santiago.regionalcaucaworldskills.models.local.bd
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.santiago.regionalcaucaworldskills.models.*
+import com.santiago.regionalcaucaworldskills.models.local.DBCategoria
+import com.santiago.regionalcaucaworldskills.models.local.DBCategoriaId
+import com.santiago.regionalcaucaworldskills.models.local.DBPedido
+import com.santiago.regionalcaucaworldskills.models.local.DBRegistro
+import com.santiago.regionalcaucaworldskills.models.webservice.enviopedido.JsonPedido
 
 class DBManager(context: Context){
 
@@ -180,11 +185,27 @@ class DBManager(context: Context){
                 dBPedido.idProducto = result.getInt(result.getColumnIndexOrThrow(Constants.TABLE_COLUMN_2_PED))
                 dBPedido.nombre = result.getString(result.getColumnIndexOrThrow(Constants.TABLE_COLUMN_3_PED))
                 dBPedido.descripcion = result.getString((result.getColumnIndexOrThrow(Constants.TABLE_COLUMN_4_PED)))
-                dBPedido.imagen = result.getBlob(result.getColumnIndexOrThrow(Constants.TABLE_COLUMN_5_PED))
+                dBPedido.imagen = result.getString(result.getColumnIndexOrThrow(Constants.TABLE_COLUMN_5_PED))
                 dBPedido.precioUnidad = result.getInt(result.getColumnIndexOrThrow(Constants.TABLE_COLUMN_6_PED))
                 dBPedido.precioTotal = result.getInt(result.getColumnIndexOrThrow(Constants.TABLE_COLUMN_7_PED))
                 dBPedido.cantidad = result.getInt(result.getColumnIndexOrThrow(Constants.TABLE_COLUMN_8_PED))
                 lista.add(dBPedido)
+            }while (result.moveToNext())
+        closeDb()
+        return lista
+
+    }
+    fun listEnvioPedido():MutableList<JsonPedido>{
+        val lista : MutableList<JsonPedido> = arrayListOf()
+        openDbRd()
+        val result = db?.rawQuery(Constants.QUERY_ALL + Constants.TABLE_NAME_PED,null)
+        if (result!!.moveToFirst())
+            do {
+                val jsonPedido = JsonPedido()
+                jsonPedido.id_producto = result.getInt(result.getColumnIndexOrThrow(Constants.TABLE_COLUMN_2_PED))
+                jsonPedido.cantidad = result.getInt(result.getColumnIndexOrThrow(Constants.TABLE_COLUMN_8_PED))
+                jsonPedido.precio = result.getInt(result.getColumnIndexOrThrow(Constants.TABLE_COLUMN_6_PED))
+                lista.add(jsonPedido)
             }while (result.moveToNext())
         closeDb()
         return lista
@@ -204,7 +225,7 @@ class DBManager(context: Context){
                 dBPedido.idProducto = result.getInt(result.getColumnIndexOrThrow(Constants.TABLE_COLUMN_2_PED))
                 dBPedido.nombre = result.getString(result.getColumnIndexOrThrow(Constants.TABLE_COLUMN_3_PED))
                 dBPedido.descripcion = result.getString((result.getColumnIndexOrThrow(Constants.TABLE_COLUMN_4_PED)))
-                dBPedido.imagen = result.getBlob(result.getColumnIndexOrThrow(Constants.TABLE_COLUMN_5_PED))
+                dBPedido.imagen = result.getString(result.getColumnIndexOrThrow(Constants.TABLE_COLUMN_5_PED))
                 dBPedido.precioUnidad = result.getInt(result.getColumnIndexOrThrow(Constants.TABLE_COLUMN_6_PED))
                 dBPedido.precioTotal = result.getInt(result.getColumnIndexOrThrow(Constants.TABLE_COLUMN_7_PED))
                 dBPedido.cantidad = result.getInt(result.getColumnIndexOrThrow(Constants.TABLE_COLUMN_8_PED))
@@ -226,9 +247,5 @@ class DBManager(context: Context){
         val res = db?.delete(Constants.TABLE_NAME_PED,null,null)
         closeDb()
         return res!!
-    }
-
-    fun insertarHistorial(){
-
     }
 }

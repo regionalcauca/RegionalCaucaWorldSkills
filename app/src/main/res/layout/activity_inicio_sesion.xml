@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.iniciosesion.InicioSesionActivity">
 
+
     <ImageView
         android:id="@+id/imageView7"
         android:layout_width="match_parent"
@@ -41,6 +42,8 @@
             app:endIconTint="@color/white"
             app:boxBackgroundColor="@color/black_degrade_1"
             android:textColorHint="@color/white"
+            app:startIconDrawable="@drawable/ic_baseline_mail_outline_24"
+            app:startIconTint="@color/white"
             >
 
             <com.google.android.material.textfield.TextInputEditText
@@ -67,7 +70,9 @@
             app:hintTextColor="@color/white"
             app:endIconTint="@color/white"
             app:boxBackgroundColor="@color/black_degrade_1"
-            android:textColorHint="@color/white">
+            android:textColorHint="@color/white"
+            app:startIconDrawable="@drawable/ic_baseline_lock_24"
+            app:startIconTint="@color/white">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etContrasena"

@@ -8,10 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.santiago.regionalcaucaworldskills.R
 import com.santiago.regionalcaucaworldskills.databinding.ItemPedidoBinding
-import com.santiago.regionalcaucaworldskills.models.bd.DBManager
-import com.santiago.regionalcaucaworldskills.models.DBPedido
+import com.santiago.regionalcaucaworldskills.models.local.bd.DBManager
+import com.santiago.regionalcaucaworldskills.models.local.DBPedido
 
 class PedidoAdapter(val pedido: List<DBPedido>) :
     RecyclerView.Adapter<PedidoAdapter.PedidoHolder>() {
@@ -33,7 +34,8 @@ class PedidoAdapter(val pedido: List<DBPedido>) :
             binding.txtPrecioUnidad.text = "Precio Unidad : $ " + pedido.precioUnidad
             binding.txtPrecioTotal.text = "Precio Total : $ " + pedido.precioTotal
             binding.txtCantidad.text = pedido.cantidad.toString()
-            binding.img.setImageBitmap(decodeBitmap(pedido.imagen))
+            //binding.img.setImageBitmap(decodeBitmap(pedido.imagen))
+            Glide.with(binding.root).load(pedido.imagen).into(binding.img)
             binding.imgSum.setOnClickListener {
                 val res =  dbManager.updatePedido(pedido.id,pedido.precioUnidad*(pedido.cantidad+1),pedido.cantidad+1)
                 if (res>0){
